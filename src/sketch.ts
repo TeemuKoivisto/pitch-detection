@@ -52,7 +52,7 @@ export default function sketch(p: any) {
   }
 
   p.setup = function () {
-    p.createCanvas(512, 512, p.WEBGL)
+    p.createCanvas(512, 512)
     p.noFill()
     mic = new p5.AudioIn()
     mic.start(startPitch)
