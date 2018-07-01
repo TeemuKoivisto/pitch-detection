@@ -1,22 +1,17 @@
-import * as React from 'react';
-import './App.css';
+import * as React from 'react'
+import P5Wrapper from './P5Wrapper'
 
-import logo from './logo.svg';
+import sketch from './sketch'
 
 class App extends React.Component {
+
   public render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+      <div>
+        <P5Wrapper sketch={sketch} />
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
