@@ -51,6 +51,34 @@ export default function sketch(p: any) {
     crepe = new PitchDetection(p.getAudioContext(), mic.stream)
   }
 
+  function findClosestFrequency(pitch: number) {
+    let closest: [string, number] = ['', -1]
+    let diff = -1
+    // debugger
+    frequencies.forEach((freq: [string, number]) => {
+      const currDiff = Math.abs(freq[1] - pitch)
+      const oldDiff = Math.abs(freq[1] - closest[1])
+      if (closest[1] === -1 || currDiff < oldDiff) {
+        closest = freq
+        diff = freq[1] - pitch
+      }
+    })
+    return [closest, diff]
+  }
+
+  function createText(pitch: number) {
+    p.fill(0)
+    if (isNaN(pitch)) {
+      p.text('No voice', 10, 35)
+    }
+    const closest = findClosestFrequency(pitch)
+    p.text(pitch, 10, 35)
+    p.text(closest[0][1], 10, 50)
+    p.text(closest[0][0], 10, 65)
+    p.text(closest[1], 10, 80)
+    p.noFill()
+  }
+
   p.setup = function () {
     p.createCanvas(512, 512)
     p.noFill()
@@ -65,10 +93,11 @@ export default function sketch(p: any) {
       const pitch = crepe.getResults()
       if (pitch) {
         const freq = parseFloat(pitch['result'].split(' ')[0])
+        createText(freq)
         pitchHistory.push(freq)
         if (pitchHistory.length === 513) pitchHistory.splice(0, 1)
       }
-      p.stroke(255, 255, 0)
+      // p.stroke(255, 255, 0)
       pitchHistory.map((pitch: number, i: number) => {
         if (!isNaN(pitch)) {
           p.vertex(i, 512 - pitch, 0, 255, p.height, 0)
@@ -76,7 +105,7 @@ export default function sketch(p: any) {
       })
     }
     // Frequencies
-    p.stroke(226, 255, 0)
+    // p.stroke(225, 255, 0)
     for (let i = 0; i < frequencies.length; i += 1) {
       const freq = frequencies[i][1] as number
       p.line(0, 512 - freq, p.width, 512 - freq)

@@ -7,7 +7,7 @@ class App extends React.Component {
 
   public render() {
     return (
-      <div>
+      <div className="app-container">
         <P5Wrapper sketch={sketch} />
       </div>
     )
