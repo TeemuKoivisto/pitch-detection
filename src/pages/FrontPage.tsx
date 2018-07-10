@@ -1,5 +1,4 @@
 import * as React from 'react'
-// import { inject } from 'mobx-react'
 import { observer, inject } from 'mobx-react'
 import p5 from 'p5'
 
@@ -13,13 +12,15 @@ interface IFrontPageInjectedProps {
     recorder: p5.SoundRecorder
     soundFile: p5.SoundFile
     crepe: PitchDetection | undefined
-    pitchHistory: number[]
-    pitchHistoryLength: number
-    appendPitchHistory: (freq: number) => void
     recordAudio: () => void
     stopRecording: () => void
     playAudio: () => void
     saveAudio: () => void
+  },
+  frequencyStore: {
+    pitchHistory: number[]
+    pitchHistoryLength: number
+    appendPitchHistory: (freq: number) => void
   }
 }
 
@@ -27,7 +28,7 @@ interface IFrontPageState {
   recordingState: number
 }
 
-@inject('audioStore')
+@inject('audioStore', 'frequencyStore')
 @observer
 export class FrontPage extends React.Component<{}, IFrontPageState> {
 
@@ -76,7 +77,6 @@ export class FrontPage extends React.Component<{}, IFrontPageState> {
 
   switchRecordingState(state: number) {
     const props = this.injected.audioStore
-    console.log(props)
     switch (state) {
       case 1:
         props.recordAudio()
@@ -94,7 +94,8 @@ export class FrontPage extends React.Component<{}, IFrontPageState> {
   }
 
   public render() {
-    const { crepe, pitchHistory, pitchHistoryLength } = this.injected.audioStore
+    const { crepe } = this.injected.audioStore
+    const { pitchHistory, pitchHistoryLength } = this.injected.frequencyStore
     return (
       <div className="app-container">
         { pitchHistoryLength }
@@ -106,10 +107,3 @@ export class FrontPage extends React.Component<{}, IFrontPageState> {
     )
   }
 }
-
-// export const FrontPage = inject((stores: IStores) => ({
-//   mic: stores.audioStore.pitchHistory,
-//   pitchHistory: stores.audioStore.pitchHistory,
-//   pitchHistoryLength: stores.audioStore.pitchHistoryLength,
-//   appendPitchHistory: stores.audioStore.appendPitchHistory,
-// }))(FrontPageClass)
