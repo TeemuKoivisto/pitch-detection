@@ -86,6 +86,10 @@ export default function sketch(p: any) {
     mic.start(startPitch)
   }
 
+  p.onClick = function () {
+    console.log('yolo')
+  }
+
   p.draw = function () {
     p.background(200)
     p.beginShape()
