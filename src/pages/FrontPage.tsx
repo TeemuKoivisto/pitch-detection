@@ -1,13 +1,22 @@
 import * as React from 'react'
-import P5Wrapper from '../p5/P5Wrapper'
+import { inject } from 'mobx-react'
 
+import P5Wrapper from '../p5/P5Wrapper'
 import sketch from '../p5/sketch'
+
+import { IStores } from '../stores'
+
+interface IFrontPageInjectedProps {
+  pitchHistory: number[]
+  pitchHistoryLength: number
+  appendPitchHistory: (freq: number) => void
+}
 
 interface IFrontPageState {
   recordingState: number
 }
 
-class FrontPage extends React.Component<{}, IFrontPageState> {
+class FrontPageClass extends React.Component<{}, IFrontPageState> {
 
   private p5Ref: React.RefObject<P5Wrapper>
 
@@ -17,6 +26,10 @@ class FrontPage extends React.Component<{}, IFrontPageState> {
     this.state = {
       recordingState: 1,
     }
+  }
+
+  private get injected() {
+    return this.props as IFrontPageInjectedProps
   }
 
   get recordButtonText() {
@@ -49,8 +62,10 @@ class FrontPage extends React.Component<{}, IFrontPageState> {
   }
 
   public render() {
+    const { pitchHistoryLength } = this.injected
     return (
       <div className="app-container">
+        { pitchHistoryLength }
         <div>
           <button onClick={this.handleRecordClick}>{this.recordButtonText}</button>
         </div>
@@ -60,4 +75,8 @@ class FrontPage extends React.Component<{}, IFrontPageState> {
   }
 }
 
-export default FrontPage
+export const FrontPage = inject((stores: IStores) => ({
+  pitchHistory: stores.audioStore.pitchHistory,
+  pitchHistoryLength: stores.audioStore.pitchHistoryLength,
+  appendPitchHistory: stores.audioStore.appendPitchHistory,
+}))(FrontPageClass)

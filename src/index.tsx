@@ -9,7 +9,7 @@ import { confMobx } from './stores/mobxConf'
 import { defaultTheme } from './theme/defaultTheme'
 
 // import { Routes } from './routes'
-import FrontPage from './pages/FrontPage'
+import { FrontPage } from './pages/FrontPage'
 
 import './index.css'
 

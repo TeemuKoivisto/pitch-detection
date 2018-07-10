@@ -3,6 +3,8 @@ import PitchDetection from '../pitch-detection/PitchDetection'
 import p5 from 'p5'
 import 'p5/lib/addons/p5.sound'
 
+import { audioStore } from '../stores/AudioStore'
+
 const frequencies = [
   ['C2', 65.41],
   ['C#2/Db2', 69.30],
@@ -117,6 +119,7 @@ export default function sketch(p: any) {
       if (pitch) {
         const freq = parseFloat(pitch['result'].split(' ')[0])
         createText(freq)
+        audioStore.appendPitchHistory(freq)
         pitchHistory.push(freq)
         if (pitchHistory.length === 513) pitchHistory.splice(0, 1)
       }

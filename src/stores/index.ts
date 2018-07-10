@@ -1,7 +1,7 @@
 import { audioStore, IAudioStore } from './AudioStore'
 
 export interface IStores {
-  errorStore: IAudioStore,
+  audioStore: IAudioStore,
 }
 
 export const stores = {
