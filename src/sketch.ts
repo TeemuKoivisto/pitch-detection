@@ -45,6 +45,8 @@ const frequencies = [
 export default function sketch(p: any) {
   let mic: any
   let crepe: any
+  let recorder: any
+  let soundFile: any
   const pitchHistory: number[] = []
 
   function startPitch() {
@@ -84,10 +86,26 @@ export default function sketch(p: any) {
     p.noFill()
     mic = new p5.AudioIn()
     mic.start(startPitch)
+
+    recorder = new p5.SoundRecorder()
+    recorder.setInput(mic)
+    soundFile = new p5.SoundFile()
   }
 
-  p.onClick = function () {
-    console.log('yolo')
+  p.onRecordClick = function (state: number) {
+    switch (state) {
+      case 1:
+        recorder.record(soundFile)
+        break
+      case 2:
+        recorder.stop()
+        break
+      case 3:
+        soundFile.play()
+        break
+      default:
+        break
+    }
   }
 
   p.draw = function () {

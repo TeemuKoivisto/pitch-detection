@@ -3,25 +3,57 @@ import P5Wrapper from './P5Wrapper'
 
 import sketch from './sketch'
 
-class App extends React.Component {
+interface IAppState {
+  recordingState: number
+}
+
+class App extends React.Component<{}, IAppState> {
 
   private p5Ref: React.RefObject<P5Wrapper>
 
   constructor(props: {}) {
     super(props)
     this.p5Ref = React.createRef()
+    this.state = {
+      recordingState: 1,
+    }
   }
 
-  handleClick = (e: any) => {
+  get recordButtonText() {
+    switch (this.state.recordingState) {
+      case 1:
+        return 'Record'
+      case 2:
+        return 'Stop'
+      case 3:
+        return 'Play'
+      default:
+        return ''
+    }
+  }
+
+  handleRecordClick = (e: React.MouseEvent) => {
+    const { recordingState } = this.state
+    if (recordingState === 3) {
+      this.setState({
+        recordingState: 1
+      })
+    } else {
+      this.setState({
+        recordingState: recordingState + 1
+      })
+    }
     if (this.p5Ref && this.p5Ref.current) {
-      this.p5Ref.current.canvas.onClick()
+      this.p5Ref.current.canvas.onRecordClick(recordingState)
     }
   }
 
   public render() {
     return (
       <div className="app-container">
-        <button onClick={this.handleClick}>Click</button>
+        <div>
+          <button onClick={this.handleRecordClick}>{this.recordButtonText}</button>
+        </div>
         <P5Wrapper sketch={sketch} ref={this.p5Ref}/>
       </div>
     )
