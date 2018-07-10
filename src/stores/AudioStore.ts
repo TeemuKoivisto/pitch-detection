@@ -1,4 +1,4 @@
-import { action, computed, observable } from 'mobx'
+import { action, computed, observable, runInAction } from 'mobx'
 import p5 from 'p5'
 import 'p5/lib/addons/p5.sound'
 
@@ -9,6 +9,7 @@ import { IAudioIn } from '../interfaces/p5'
 const MAX_PITCH_HISTORY = 513
 
 export interface IAudioStore {
+  p5: any // fucking fuck this dum shait
   mic: IAudioIn
   recorder: p5.SoundRecorder
   soundFile: p5.SoundFile
@@ -16,9 +17,14 @@ export interface IAudioStore {
   pitchHistory: number[]
   pitchHistoryLength: number
   appendPitchHistory: (freq: number) => void
+  recordAudio: () => void
+  stopRecording: () => void
+  playAudio: () => void
+  saveAudio: () => void
 }
 
 export class AudioStoreClass implements IAudioStore {
+  @observable p5: any
   @observable mic = new p5.AudioIn() as IAudioIn
   @observable recorder = new p5.SoundRecorder()
   @observable soundFile = new p5.SoundFile()
@@ -30,9 +36,12 @@ export class AudioStoreClass implements IAudioStore {
   }
 
   @action
-  startMic(audioContext: AudioContext) {
+  startMic(p: p5, audioContext: AudioContext) {
+    this.p5 = p
     this.mic.start(() => {
-      this.crepe = new PitchDetection(audioContext, this.mic.stream)
+      runInAction(() => {
+        this.crepe = new PitchDetection(audioContext, this.mic.stream)
+      })
     })
     this.recorder.setInput(this.mic)
   }
@@ -45,6 +54,27 @@ export class AudioStoreClass implements IAudioStore {
     }
   }
 
+  @action
+  recordAudio() {
+    this.recorder.record(this.soundFile)
+  }
+
+  @action
+  stopRecording() {
+    this.recorder.stop()
+  }
+
+  @action
+  playAudio() {
+    this.soundFile.play()
+  }
+
+  @action
+  saveAudio() {
+    if (this.p5) {
+      this.p5.saveSound(this.soundFile, 'sound-file.wav')
+    }
+  }
 }
 
 export const audioStore = new AudioStoreClass()

@@ -86,7 +86,7 @@ export default function sketch(p: any) {
   p.setup = function () {
     p.createCanvas(512, 512)
     p.noFill()
-    audioStore.startMic(p.getAudioContext())
+    audioStore.startMic(p, p.getAudioContext())
     // mic = new p5.AudioIn()
     // mic.start(startPitch)
 

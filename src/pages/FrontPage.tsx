@@ -8,13 +8,19 @@ import sketch from '../p5/sketch'
 import PitchDetection from '../pitch-detection/PitchDetection'
 
 interface IFrontPageInjectedProps {
-  mic: p5.AudioIn
-  recorder: p5.SoundRecorder
-  soundFile: p5.SoundFile
-  crepe: PitchDetection | undefined
-  pitchHistory: number[]
-  pitchHistoryLength: number
-  appendPitchHistory: (freq: number) => void
+  audioStore: {
+    mic: p5.AudioIn
+    recorder: p5.SoundRecorder
+    soundFile: p5.SoundFile
+    crepe: PitchDetection | undefined
+    pitchHistory: number[]
+    pitchHistoryLength: number
+    appendPitchHistory: (freq: number) => void
+    recordAudio: () => void
+    stopRecording: () => void
+    playAudio: () => void
+    saveAudio: () => void
+  }
 }
 
 interface IFrontPageState {
@@ -64,12 +70,31 @@ export class FrontPage extends React.Component<{}, IFrontPageState> {
       })
     }
     if (this.p5Ref && this.p5Ref.current) {
-      this.p5Ref.current.canvas.onRecordClick(recordingState)
+      this.switchRecordingState(recordingState)
+    }
+  }
+
+  switchRecordingState(state: number) {
+    const props = this.injected.audioStore
+    console.log(props)
+    switch (state) {
+      case 1:
+        props.recordAudio()
+        break
+      case 2:
+        props.stopRecording()
+        break
+      case 3:
+        props.playAudio()
+        props.saveAudio()
+        break
+      default:
+        break
     }
   }
 
   public render() {
-    const { crepe, pitchHistory, pitchHistoryLength } = this.injected
+    const { crepe, pitchHistory, pitchHistoryLength } = this.injected.audioStore
     return (
       <div className="app-container">
         { pitchHistoryLength }
