@@ -1,12 +1,17 @@
 import * as React from 'react'
-import { inject } from 'mobx-react'
+// import { inject } from 'mobx-react'
+import { observer, inject } from 'mobx-react'
+import p5 from 'p5'
 
 import P5Wrapper from '../p5/P5Wrapper'
 import sketch from '../p5/sketch'
-
-import { IStores } from '../stores'
+import PitchDetection from '../pitch-detection/PitchDetection'
 
 interface IFrontPageInjectedProps {
+  mic: p5.AudioIn
+  recorder: p5.SoundRecorder
+  soundFile: p5.SoundFile
+  crepe: PitchDetection | undefined
   pitchHistory: number[]
   pitchHistoryLength: number
   appendPitchHistory: (freq: number) => void
@@ -16,7 +21,9 @@ interface IFrontPageState {
   recordingState: number
 }
 
-class FrontPageClass extends React.Component<{}, IFrontPageState> {
+@inject('audioStore')
+@observer
+export class FrontPage extends React.Component<{}, IFrontPageState> {
 
   private p5Ref: React.RefObject<P5Wrapper>
 
@@ -62,21 +69,22 @@ class FrontPageClass extends React.Component<{}, IFrontPageState> {
   }
 
   public render() {
-    const { pitchHistoryLength } = this.injected
+    const { crepe, pitchHistory, pitchHistoryLength } = this.injected
     return (
       <div className="app-container">
         { pitchHistoryLength }
         <div>
           <button onClick={this.handleRecordClick}>{this.recordButtonText}</button>
         </div>
-        <P5Wrapper sketch={sketch} ref={this.p5Ref}/>
+        <P5Wrapper sketch={sketch} crepe={crepe} pitchHistory={pitchHistory} ref={this.p5Ref}/>
       </div>
     )
   }
 }
 
-export const FrontPage = inject((stores: IStores) => ({
-  pitchHistory: stores.audioStore.pitchHistory,
-  pitchHistoryLength: stores.audioStore.pitchHistoryLength,
-  appendPitchHistory: stores.audioStore.appendPitchHistory,
-}))(FrontPageClass)
+// export const FrontPage = inject((stores: IStores) => ({
+//   mic: stores.audioStore.pitchHistory,
+//   pitchHistory: stores.audioStore.pitchHistory,
+//   pitchHistoryLength: stores.audioStore.pitchHistoryLength,
+//   appendPitchHistory: stores.audioStore.appendPitchHistory,
+// }))(FrontPageClass)

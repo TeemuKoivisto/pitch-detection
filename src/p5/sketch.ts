@@ -1,6 +1,6 @@
 
-import PitchDetection from '../pitch-detection/PitchDetection'
-import p5 from 'p5'
+// import PitchDetection from '../pitch-detection/PitchDetection'
+// import p5 from 'p5'
 import 'p5/lib/addons/p5.sound'
 
 import { audioStore } from '../stores/AudioStore'
@@ -45,15 +45,15 @@ const frequencies = [
 ]
 
 export default function sketch(p: any) {
-  let mic: any
-  let crepe: any
-  let recorder: any
-  let soundFile: any
-  const pitchHistory: number[] = []
+  // let mic: any
+  // let crepe: any
+  // let recorder: any
+  // let soundFile: any
+  // const pitchHistory: number[] = []
 
-  function startPitch() {
-    crepe = new PitchDetection(p.getAudioContext(), mic.stream)
-  }
+  // function startPitch() {
+  //   crepe = new PitchDetection(p.getAudioContext(), mic.stream)
+  // }
 
   function findClosestFrequency(pitch: number) {
     let closest: [string, number] = ['', -1]
@@ -86,32 +86,35 @@ export default function sketch(p: any) {
   p.setup = function () {
     p.createCanvas(512, 512)
     p.noFill()
-    mic = new p5.AudioIn()
-    mic.start(startPitch)
+    audioStore.startMic(p.getAudioContext())
+    // mic = new p5.AudioIn()
+    // mic.start(startPitch)
 
-    recorder = new p5.SoundRecorder()
-    recorder.setInput(mic)
-    soundFile = new p5.SoundFile()
+    // recorder = new p5.SoundRecorder()
+    // recorder.setInput(mic)
+    // soundFile = new p5.SoundFile()
   }
 
   p.onRecordClick = function (state: number) {
-    switch (state) {
-      case 1:
-        recorder.record(soundFile)
-        break
-      case 2:
-        recorder.stop()
-        break
-      case 3:
-        soundFile.play()
-        p.saveSound(soundFile, 'sound-file.wav')
-        break
-      default:
-        break
-    }
+    // switch (state) {
+    //   case 1:
+    //     recorder.record(soundFile)
+    //     break
+    //   case 2:
+    //     recorder.stop()
+    //     break
+    //   case 3:
+    //     soundFile.play()
+    //     p.saveSound(soundFile, 'sound-file.wav')
+    //     break
+    //   default:
+    //     break
+    // }
   }
 
   p.draw = function () {
+    const { crepe, pitchHistory, appendPitchHistory } = audioStore
+
     p.background(200)
     p.beginShape()
     if (crepe) {
@@ -119,9 +122,7 @@ export default function sketch(p: any) {
       if (pitch) {
         const freq = parseFloat(pitch['result'].split(' ')[0])
         createText(freq)
-        audioStore.appendPitchHistory(freq)
-        pitchHistory.push(freq)
-        if (pitchHistory.length === 513) pitchHistory.splice(0, 1)
+        appendPitchHistory(freq)
       }
       // p.stroke(255, 255, 0)
       pitchHistory.map((pitch: number, i: number) => {
