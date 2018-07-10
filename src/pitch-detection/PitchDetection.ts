@@ -1,8 +1,3 @@
-// Copyright (c) 2018 ml5
-//
-// This software is released under the MIT License.
-// https://opensource.org/licenses/MIT
-
 /*
   Crepe Pitch Detection model
   https://github.com/marl/crepe/tree/gh-pages
@@ -11,7 +6,7 @@
 
 import * as tf from '@tensorflow/tfjs'
 
-class PitchDetection {
+export default class PitchDetection {
 
   audioContext: AudioContext
   stream: MediaStream
@@ -119,5 +114,3 @@ class PitchDetection {
     return this.results
   }
 }
-
-export default PitchDetection

@@ -1,5 +1,5 @@
 
-import PitchDetection from './PitchDetection'
+import PitchDetection from '../pitch-detection/PitchDetection'
 import p5 from 'p5'
 import 'p5/lib/addons/p5.sound'
 
@@ -102,6 +102,7 @@ export default function sketch(p: any) {
         break
       case 3:
         soundFile.play()
+        p.saveSound(soundFile, 'sound-file.wav')
         break
       default:
         break

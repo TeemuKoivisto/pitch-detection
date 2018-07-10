@@ -1,13 +1,13 @@
 import * as React from 'react'
-import P5Wrapper from './P5Wrapper'
+import P5Wrapper from '../p5/P5Wrapper'
 
-import sketch from './sketch'
+import sketch from '../p5/sketch'
 
-interface IAppState {
+interface IFrontPageState {
   recordingState: number
 }
 
-class App extends React.Component<{}, IAppState> {
+class FrontPage extends React.Component<{}, IFrontPageState> {
 
   private p5Ref: React.RefObject<P5Wrapper>
 
@@ -60,4 +60,4 @@ class App extends React.Component<{}, IAppState> {
   }
 }
 
-export default App
+export default FrontPage

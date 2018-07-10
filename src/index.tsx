@@ -1,9 +1,9 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import App from './App'
+import FrontPage from './pages/FrontPage'
 import './index.css'
 
 ReactDOM.render(
-  <App />,
+  <FrontPage />,
   document.getElementById('root') as HTMLElement
 )
