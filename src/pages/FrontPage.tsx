@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
-import p5 from 'p5'
+import * as p5 from 'p5'
 
 import P5Wrapper from '../p5/P5Wrapper'
 import sketch from '../p5/sketch'

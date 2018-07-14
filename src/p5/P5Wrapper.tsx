@@ -1,5 +1,5 @@
 import * as React from 'react'
-import p5 from 'p5'
+import * as p5 from 'p5'
 
 export default class P5Wrapper extends React.Component<any, any> {
 

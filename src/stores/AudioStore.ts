@@ -1,5 +1,5 @@
 import { action, computed, observable, runInAction } from 'mobx'
-import p5 from 'p5'
+import * as p5 from 'p5'
 import 'p5/lib/addons/p5.sound'
 
 import PitchDetection from '../pitch-detection/PitchDetection'
@@ -9,7 +9,7 @@ import { IAudioIn } from '../interfaces/p5'
 const MAX_PITCH_HISTORY = 513
 
 export interface IAudioStore {
-  p5: any // fucking fuck this dum shait
+  p5: p5 // Hmm
   mic: IAudioIn
   recorder: p5.SoundRecorder
   soundFile: p5.SoundFile
@@ -27,7 +27,7 @@ export class AudioStoreClass implements IAudioStore {
   @observable p5: any
   @observable mic = new p5.AudioIn() as IAudioIn
   @observable recorder = new p5.SoundRecorder()
-  @observable soundFile = new p5.SoundFile()
+  @observable soundFile = new p5.SoundFile('poo')
   @observable crepe: PitchDetection | undefined
   @observable pitchHistory = [] as number[]
 
@@ -36,7 +36,7 @@ export class AudioStoreClass implements IAudioStore {
   }
 
   @action
-  startMic(p: p5, audioContext: AudioContext) {
+  startMic(p: p5, audioContext: any) { // TODO any
     this.p5 = p
     this.mic.start(() => {
       runInAction(() => {

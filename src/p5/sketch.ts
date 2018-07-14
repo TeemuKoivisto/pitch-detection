@@ -1,11 +1,11 @@
 
-// import p5 from 'p5'
+import * as p5 from 'p5'
 import 'p5/lib/addons/p5.sound'
 
 import { audioStore } from '../stores/AudioStore'
 import { frequencyStore } from '../stores/FrequencyStore'
 
-export default function sketch(p: any) {
+export default function sketch(p: p5) {
   function createText(pitch: number) {
     const { findClosestFrequency } = frequencyStore
     p.fill(0)
@@ -42,7 +42,7 @@ export default function sketch(p: any) {
       // p.stroke(255, 255, 0)
       pitchHistory.map((pitch: number, i: number) => {
         if (!isNaN(pitch)) {
-          p.vertex(i, 512 - pitch, 0, 255, p.height, 0)
+          p.vertex(i, 512 - pitch, 0, 255, p.height)
         }
       })
     }
