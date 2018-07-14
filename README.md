@@ -6,4 +6,5 @@ Most of it copied from here: https://github.com/ml5js/ml5-examples/tree/master/p
 
 Regular CRA-app with Typescript.
 
-FFS there is a bug in p5-typings so to fix it run this after installing this: `rm node_modules/p5/lib/p5.d.ts`
+Currently there is a bug in p5-typings so to fix it run this after installing this: `rm node_modules/p5/lib/p5.d.ts`
+which doesn't even help, ha! Instead add all the constants to the p5.d.ts and then manually fix SoundFile's constructor and amp-method. Hmm.
