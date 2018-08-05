@@ -15,6 +15,7 @@ interface IFrontPageInjectedProps {
     recordAudio: () => void
     stopRecording: () => void
     playAudio: () => void
+    stopAudio: () => void
     saveAudio: () => void
   },
   frequencyStore: {
@@ -74,6 +75,12 @@ export class FrontPage extends React.Component<{}, IFrontPageState> {
       this.switchRecordingState(recordingState)
     }
   }
+  handleStopRecord = (e: React.MouseEvent) => {
+    this.injected.audioStore.stopAudio()
+  }
+  handleSaveRecord = (e: React.MouseEvent) => {
+    this.injected.audioStore.saveAudio()
+  }
 
   switchRecordingState(state: number) {
     const props = this.injected.audioStore
@@ -86,7 +93,6 @@ export class FrontPage extends React.Component<{}, IFrontPageState> {
         break
       case 3:
         props.playAudio()
-        props.saveAudio()
         break
       default:
         break
@@ -101,6 +107,8 @@ export class FrontPage extends React.Component<{}, IFrontPageState> {
         { pitchHistoryLength }
         <div>
           <button onClick={this.handleRecordClick}>{this.recordButtonText}</button>
+          <button onClick={this.handleStopRecord}>Pause</button>
+          <button onClick={this.handleSaveRecord}>Save</button>
         </div>
         <P5Wrapper sketch={sketch} crepe={crepe} pitchHistory={pitchHistory} ref={this.p5Ref}/>
       </div>

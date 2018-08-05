@@ -20,6 +20,7 @@ export interface IAudioStore {
   recordAudio: () => void
   stopRecording: () => void
   playAudio: () => void
+  stopAudio: () => void
   saveAudio: () => void
 }
 
@@ -27,7 +28,7 @@ export class AudioStoreClass implements IAudioStore {
   @observable p5: any
   @observable mic = new p5.AudioIn() as IAudioIn
   @observable recorder = new p5.SoundRecorder()
-  @observable soundFile = new p5.SoundFile('poo')
+  @observable soundFile = new p5.SoundFile()
   @observable crepe: PitchDetection | undefined
   @observable pitchHistory = [] as number[]
 
@@ -70,8 +71,13 @@ export class AudioStoreClass implements IAudioStore {
   }
 
   @action
+  stopAudio() {
+    this.soundFile.stop()
+  }
+
+  @action
   saveAudio() {
-    if (this.p5) {
+    if (this.p5 && this.soundFile.buffer) {
       this.p5.saveSound(this.soundFile, 'sound-file.wav')
     }
   }

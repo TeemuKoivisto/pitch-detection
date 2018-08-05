@@ -1,25 +1,31 @@
 import * as React from 'react'
 import * as p5 from 'p5'
 
-export default class P5Wrapper extends React.Component<any, any> {
+interface IP5WrapperProps {
+  sketch: (p: p5) => void
+  crepe: any
+  pitchHistory: number[]
+}
 
-  canvas: any
-  wrapper: any
+export default class P5Wrapper extends React.Component<IP5WrapperProps, {}> {
+
+  canvas: p5
+  private p5wrapper: HTMLDivElement
 
   componentDidMount() {
-    this.canvas = new p5(this.props.sketch, this.wrapper)
+    this.canvas = new p5(this.props.sketch, this.p5wrapper)
   }
 
-  componentWillReceiveProps(newprops: any) {
-    if (this.props.sketch !== newprops.sketch) {
-      this.wrapper.removeChild(this.wrapper.childNodes[0])
-      this.canvas = new p5(newprops.sketch, this.wrapper)
+  componentWillReceiveProps(newProps: IP5WrapperProps) {
+    if (this.props.sketch !== newProps.sketch) {
+      this.p5wrapper.removeChild(this.p5wrapper.childNodes[0])
+      this.canvas = new p5(newProps.sketch, this.p5wrapper)
     }
   }
 
   render() {
     return (
-      <div ref={(wrapper: any) => (this.wrapper = wrapper)}></div>
+      <div ref={(wrapper: HTMLDivElement) => (this.p5wrapper = wrapper)}></div>
     )
   }
 }

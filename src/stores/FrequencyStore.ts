@@ -39,14 +39,16 @@ const FREQUENCIES = [
   ['A4', 440.00],
   ['A#4/Bb4', 466.16],
   ['B4', 493.88]
-] as [string, number][]
+] as IFrequency[]
+
+export type IFrequency = [string, number]
 
 export interface IFrequencyStore {
-  readonly FREQUENCIES: [string, number][]
+  readonly FREQUENCIES: IFrequency[]
   pitchHistory: number[]
   pitchHistoryLength: number
   appendPitchHistory: (freq: number) => void
-  findClosestFrequency: (pitch: number) => [[string, number], number]
+  findClosestFrequency: (pitch: number) => [IFrequency, number]
 }
 
 export class FrequencyStoreClass implements IFrequencyStore {
@@ -66,10 +68,9 @@ export class FrequencyStoreClass implements IFrequencyStore {
   }
 
   findClosestFrequency(pitch: number) {
-    let closest: [string, number] = ['', -1]
+    let closest: IFrequency = ['', -1]
     let diff = -1
-    // debugger
-    FREQUENCIES.forEach((freq: [string, number]) => {
+    FREQUENCIES.forEach((freq: IFrequency) => {
       const currDiff = Math.abs(freq[1] - pitch)
       const oldDiff = Math.abs(freq[1] - closest[1])
       if (closest[1] === -1 || currDiff < oldDiff) {
@@ -77,7 +78,7 @@ export class FrequencyStoreClass implements IFrequencyStore {
         diff = freq[1] - pitch
       }
     })
-    return [closest, diff] as [[string, number], number]
+    return [closest, diff] as [IFrequency, number]
   }
 }
 
