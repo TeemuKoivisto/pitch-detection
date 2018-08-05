@@ -107,7 +107,9 @@ export class FrontPage extends React.Component<{}, IFrontPageState> {
     const { pitchHistory, pitchHistoryLength } = this.injected.frequencyStore
     return (
       <div className="app-container">
-        { pitchHistoryLength }
+        <PitchHistory>
+          <p>Pitch history length: { pitchHistoryLength }</p>
+        </PitchHistory>
         <ButtonContainer>
           <Button onClick={this.handleRecordClick}>{this.recordButtonText}</Button>
           <Button onClick={this.handleStopRecord}>Pause</Button>
@@ -118,6 +120,13 @@ export class FrontPage extends React.Component<{}, IFrontPageState> {
     )
   }
 }
+
+const PitchHistory = styled.div`
+  & > p {
+    font-size: 24px;
+    margin: 0;
+  }
+`
 
 const ButtonContainer = styled.div`
   margin: 10px 0 10px 0;

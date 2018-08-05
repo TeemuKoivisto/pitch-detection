@@ -5,7 +5,8 @@
     "max-line-length": [true, 140],
     "semicolon": [true, "never"],
     "trailing-comma": false,
-    "variable-name": [true, "check-format", "allow-pascal-case", "allow-leading-underscore"]
+    "variable-name": [true, "check-format", "allow-pascal-case", "allow-leading-underscore"],
+    "one-variable-per-declaration": false
   },
   "env": {
     "jest": true
