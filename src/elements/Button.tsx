@@ -2,7 +2,7 @@
 import styled from '../theme/styled'
 
 export const Button = styled.button`
-  background: #4FC3F7;
+  background: #2196F3;
   border: 1px solid #666;
   border-radius: 5px;
   color: white;
@@ -12,7 +12,7 @@ export const Button = styled.button`
   transition: 0.1s all;
 
   &:hover {
-    background: #039BE5;
+    background: #1976D2;
     box-shadow: 2px 2px #039be569;
     cursor: pointer;
   }

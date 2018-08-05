@@ -10,9 +10,10 @@ export default class PitchDetection {
 
   audioContext: AudioContext
   stream: MediaStream
-  model: any
-  results: any
+  model: tf.Model
+  results: { confidence: string, result: string } = { confidence: '', result: '' }
   running: boolean
+  private readonly centMapping: tf.Tensor<tf.Rank> = tf.add(tf.linspace(0, 7180, 360), tf.tensor(1997.3794084376191))
 
   constructor(audioContext: AudioContext, stream: MediaStream) {
     this.audioContext = audioContext
@@ -57,7 +58,7 @@ export default class PitchDetection {
     }
   }
 
-  static resample(audioBuffer: AudioBuffer, onComplete: any) {
+  static resample(audioBuffer: AudioBuffer, onComplete: (resampled: Float32Array) => void) {
     const interpolate = (audioBuffer.sampleRate % 16000 !== 0)
     const multiplier = audioBuffer.sampleRate / 16000
     const original = audioBuffer.getChannelData(0)
@@ -76,9 +77,7 @@ export default class PitchDetection {
   }
 
   processMicrophoneBuffer(event: AudioProcessingEvent) {
-    this.results = {}
-    const centMapping = tf.add(tf.linspace(0, 7180, 360), tf.tensor(1997.3794084376191))
-    PitchDetection.resample(event.inputBuffer, (resampled: any) => {
+    PitchDetection.resample(event.inputBuffer, (resampled: Float32Array) => {
       tf.tidy(() => {
         this.running = true
         const frame = tf.tensor(resampled.slice(0, 1024))
@@ -87,7 +86,8 @@ export default class PitchDetection {
         const framestd = tf.tensor(normDS / Math.sqrt(1024))
         const normalized = tf.div(zeromean, framestd)
         const input = normalized.reshape([1, 1024])
-        const activation = this.model.predict([input]).reshape([360])
+        const predictTensor = this.model.predict([input]) as tf.Tensor<tf.Rank>
+        const activation = predictTensor.reshape([360])
         const confidence = activation.max().dataSync()[0]
         const center = activation.argMax().dataSync()[0]
         this.results.confidence = confidence.toFixed(3)
@@ -95,12 +95,13 @@ export default class PitchDetection {
         const start = Math.max(0, center - 4)
         const end = Math.min(360, center + 5)
         const weights = activation.slice([start], [end - start])
-        const cents = centMapping.slice([start], [end - start])
+        const cents = this.centMapping.slice([start], [end - start])
 
         const products = tf.mul(weights, cents)
         const productsDS = products.dataSync() as Int32Array
         const productSum = productsDS.reduce((a: number, b: number) => a + b, 0)
-        const weightSum = weights.dataSync().reduce((a: number, b: number) => a + b, 0)
+        const weightDS = weights.dataSync() as Int32Array
+        const weightSum = weightDS.reduce((a: number, b: number) => a + b, 0)
         const predictedCent = productSum / weightSum
         const predictedHz = 10 * ((predictedCent / 1200.0) ** 2)
 
