@@ -1,10 +1,13 @@
 import * as React from 'react'
 import { observer, inject } from 'mobx-react'
 import * as p5 from 'p5'
+import styled from '../theme/styled'
 
 import P5Wrapper from '../p5/P5Wrapper'
 import sketch from '../p5/sketch'
 import PitchDetection from '../pitch-detection/PitchDetection'
+
+import { Button } from '../elements/Button'
 
 interface IFrontPageInjectedProps {
   audioStore: {
@@ -105,13 +108,20 @@ export class FrontPage extends React.Component<{}, IFrontPageState> {
     return (
       <div className="app-container">
         { pitchHistoryLength }
-        <div>
-          <button onClick={this.handleRecordClick}>{this.recordButtonText}</button>
-          <button onClick={this.handleStopRecord}>Pause</button>
-          <button onClick={this.handleSaveRecord}>Save</button>
-        </div>
+        <ButtonContainer>
+          <Button onClick={this.handleRecordClick}>{this.recordButtonText}</Button>
+          <Button onClick={this.handleStopRecord}>Pause</Button>
+          <Button onClick={this.handleSaveRecord}>Save</Button>
+        </ButtonContainer>
         <P5Wrapper sketch={sketch} crepe={crepe} pitchHistory={pitchHistory} ref={this.p5Ref}/>
       </div>
     )
   }
 }
+
+const ButtonContainer = styled.div`
+  margin: 10px 0 10px 0;
+  & > ${Button} {
+    margin-right: 5px;
+  }
+`
